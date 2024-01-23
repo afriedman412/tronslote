@@ -94,7 +94,7 @@ def translate_text(
     later: https://cloud.google.com/translate/docs/advanced/batch-translation
     """
     credentials = service_account.Credentials.from_service_account_file(
-        os.getenv("GOOGLE_APP_CREDENTIALS_PATH"),
+        os.path.join(os.getenv("APP_DIR"), os.getenv("GOOGLE_APP_CREDENTIALS_FILE")),
         scopes=['https://www.googleapis.com/auth/cloud-platform']
     )
     client = translate.TranslationServiceClient(credentials=credentials)
