@@ -1,5 +1,7 @@
-from flask import Blueprint, jsonify, render_template, request, Response
 from typing import Union
+
+from flask import Blueprint, Response, jsonify, render_template, request
+
 from . import TronsForm, full_translation_loop, translate_text
 
 routes = Blueprint("routes", __name__)
@@ -29,6 +31,7 @@ def test_translation() -> Response:
     t = translate_text("look at that flying eggplant!", "en", "fr")
     return jsonify(t._asdict())
 
+
 @routes.route("/api/submit", methods=['POST'])
 def trons_endpoint() -> Response:
     input_dict = request.get_json()
@@ -38,7 +41,6 @@ def trons_endpoint() -> Response:
     retranslations = full_translation_loop(
         input_text, base_language, interim_languages)
     return jsonify(retranslations)
-    return request.data
 
 
 @routes.route("/", methods=['GET', 'POST'])

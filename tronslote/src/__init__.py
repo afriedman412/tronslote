@@ -1,6 +1,6 @@
 import os
 from collections import namedtuple
-from typing import Tuple, List, Dict, Any
+from typing import Any, Dict, List, Tuple
 
 from flask_wtf import FlaskForm
 from google.cloud import translate
@@ -84,6 +84,14 @@ def full_translation_loop(
     return retranslations
 
 
+def make_credentials():
+    credentials = service_account.Credentials.from_service_account_file(
+        os.path.join(os.environ["APP_DIR"], os.environ["GOOGLE_APP_CREDENTIALS_FILE"]),
+        scopes=['https://www.googleapis.com/auth/cloud-platform']
+    )
+    return credentials
+
+
 def translate_text(
     text: str = "YOUR_TEXT_TO_TRANSLATE",
     input_language_code: str = "en-US",
@@ -93,10 +101,7 @@ def translate_text(
 
     later: https://cloud.google.com/translate/docs/advanced/batch-translation
     """
-    credentials = service_account.Credentials.from_service_account_file(
-        os.path.join(os.getenv("APP_DIR"), os.getenv("GOOGLE_APP_CREDENTIALS_FILE")),
-        scopes=['https://www.googleapis.com/auth/cloud-platform']
-    )
+    credentials = make_credentials()
     client = translate.TranslationServiceClient(credentials=credentials)
     location = "global"
     parent = f"projects/{os.getenv('PROJECT_ID')}/locations/{location}"
